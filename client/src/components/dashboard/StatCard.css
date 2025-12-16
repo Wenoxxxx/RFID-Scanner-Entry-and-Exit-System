@@ -1,0 +1,44 @@
+/* Base card */
+.card {
+  background: white;
+  padding: 17px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.05);
+  position: relative;
+}
+
+/* Typography */
+.card-title {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Grid (keep this here if already used globally) */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 16px;
+}
+
+/* ===== Color Variants ===== */
+.stat-card.entries {
+  border-left: 6px solid #22c55e; /* green */
+}
+
+.stat-card.exits {
+  border-left: 6px solid #3b82f6; /* blue */
+}
+
+.stat-card.attendees {
+  border-left: 6px solid #a855f7; /* purple */
+}
+
+.stat-card.default {
+  border-left: 6px solid #e5e7eb; /* neutral */
+}

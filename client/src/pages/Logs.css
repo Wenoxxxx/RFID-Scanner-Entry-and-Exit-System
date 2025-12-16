@@ -1,0 +1,21 @@
+.table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+.table thead th { 
+    padding-top: 30px;
+    margin-bottom: 20px; 
+    text-align: left; 
+}
+
+.table td {
+
+    padding-top: 20px; 
+    text-align: left; 
+}
+
+.table tr:not(:last-child) { 
+    border-bottom: 1px solid #eee; 
+}
+

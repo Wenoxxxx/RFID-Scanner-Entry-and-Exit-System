@@ -1,12 +1,24 @@
+import { NavLink } from "react-router-dom";
+import "./Sidebar.css";
+
 export default function Sidebar() {
-    return (
-        <aside className="sidebar">
-            <h2 className="logo">RFID</h2>
-            <nav>
-                <a className="active">Dashboard</a>
-                <a>Logs</a>
-                <a>Stats</a>
-            </nav>
-        </aside>
-    );
+  return (
+    <aside className="sidebar">
+      <h2 className="logo">EELS</h2>
+
+      <nav>
+        <NavLink to="/" end className="nav-link">
+          Dashboard
+        </NavLink>
+
+        <NavLink to="/logs" className="nav-link">
+          Logs
+        </NavLink>
+
+        <NavLink to="/stats" className="nav-link">
+          Stats
+        </NavLink>
+      </nav>
+    </aside>
+  );
 }

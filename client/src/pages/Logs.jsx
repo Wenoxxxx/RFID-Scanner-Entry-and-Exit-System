@@ -1,7 +1,17 @@
+import StatCard from "../components/dashboard/StatCard";
+import './Logs.css';
+
 export default function Logs() {
 return (
     <div className="card">
-        <h3>RFID Logs</h3>
+
+        <div className="stats-grid">
+            <StatCard title="Total Entries" value="1,245" />
+            <StatCard title="Total Exits" value="1,180" />
+            <StatCard title="Total Attendees" value="32" />
+            <StatCard title="Total Attendees" value="32" />
+        </div>
+
         <table className="table">
             <thead>
                 <tr><th>User</th><th>Time</th><th>Status</th></tr>
@@ -11,6 +21,8 @@ return (
                 <tr><td>Admin</td><td>05:10 PM</td><td>OUT</td></tr>
             </tbody>
         </table>
+        
     </div>
+
     );
 }
