@@ -1,35 +1,70 @@
 import StatCard from "../components/dashboard/StatCard";
 import "./Logs.css";
 import { HiPencilAlt, HiTrash } from "react-icons/hi";
+import useConfirm from "../hooks/useConfirm";
 
 export default function Logs() {
+  const {
+    isOpen,
+    type,
+    payload,
+    openConfirm,
+    closeConfirm,
+  } = useConfirm();
 
-  const handleEdit = (id) => {
-    console.log("Edit log:", id);
-  };
-
-  const handleDelete = (id) => {
-    if (confirm("Delete this record?")) {
-      console.log("Delete log:", id);
+  const handleConfirm = () => {
+    if (type === "edit") {
+      console.log("Edit log:", payload);
     }
+
+    if (type === "delete") {
+      console.log("Delete log:", payload);
+    }
+
+    closeConfirm();
   };
 
   return (
     <div className="card">
-    
-
-        <h1>Logs</h1>
+      <h1>Logs</h1>
+      <p className="subtitle">Timeline scanner logs</p>
 
       {/* STATS */}
       <div className="stats-grid">
-        <StatCard title="Total Entries" value="1,245" />
-        <StatCard title="Total Exits" value="1,180" />
-        <StatCard title="Total Attendees" value="32" />
-        <StatCard title="Active Inside" value="32" />
+        
+        <StatCard
+          title="Total Entries"
+          value="1,245"
+          variant="entries"
+          description="Total number of users who entered today."
+        />
+
+        <StatCard
+          title="Total Exits"
+          value="1,180"
+          variant="exits"
+          description="Total number of users who exited today."
+        />
+
+        <StatCard
+          title="Total Attendees"
+          value="32"
+          variant="attendees"
+          description="Users currently registered for today."
+        />
+
       </div>
-    
+
       {/* LOG TABLE */}
       <table className="table">
+        <colgroup>
+          <col />
+          <col />
+          <col />
+          <col />
+          <col style={{ width: "120px" }} />
+        </colgroup>
+
         <thead>
           <tr>
             <th>User</th>
@@ -49,16 +84,14 @@ export default function Logs() {
             <td className="actions">
               <button
                 className="icon-btn edit"
-                onClick={() => handleEdit(1)}
-                title="Edit"
+                onClick={() => openConfirm("edit", 1)}
               >
                 <HiPencilAlt />
               </button>
 
               <button
                 className="icon-btn delete"
-                onClick={() => handleDelete(1)}
-                title="Delete"
+                onClick={() => openConfirm("delete", 1)}
               >
                 <HiTrash />
               </button>
@@ -73,16 +106,14 @@ export default function Logs() {
             <td className="actions">
               <button
                 className="icon-btn edit"
-                onClick={() => handleEdit(2)}
-                title="Edit"
+                onClick={() => openConfirm("edit", 2)}
               >
                 <HiPencilAlt />
               </button>
 
               <button
                 className="icon-btn delete"
-                onClick={() => handleDelete(2)}
-                title="Delete"
+                onClick={() => openConfirm("delete", 2)}
               >
                 <HiTrash />
               </button>
@@ -91,6 +122,35 @@ export default function Logs() {
         </tbody>
       </table>
 
+      {/* CONFIRMATION MODAL */}
+      {isOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>
+              {type === "delete"
+                ? "Delete this record?"
+                : "Edit this record?"}
+            </h3>
+
+            <p>
+              {type === "delete"
+                ? "This action cannot be undone."
+                : "You are about to modify this record."}
+            </p>
+
+            <div className="modal-actions">
+              <button className="btn cancel" onClick={closeConfirm}>
+                Cancel
+              </button>
+
+              <button className={`btn ${type}`} onClick={handleConfirm}>
+                {type === "delete" ? "Delete" : "Confirm"}
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

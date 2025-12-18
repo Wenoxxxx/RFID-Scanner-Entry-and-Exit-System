@@ -15,8 +15,8 @@ export default function Sidebar() {
           Logs
         </NavLink>
 
-        <NavLink to="/stats" className="nav-link">
-          Stats
+        <NavLink to="/reports" className="nav-link">
+          Reports
         </NavLink>
       </nav>
     </aside>

@@ -2,19 +2,18 @@
   width: 220px;
   background: #fff;
   padding: 20px;
-  padding-top: 0px;
+  padding-top: 0;
   box-shadow: 2px 0 10px rgba(0,0,0,.05);
 }
 
 .sidebar .logo {  
   font-size: 2.8rem; 
-  font-weight: 00; 
+  font-weight: 700; 
   color: #4f46e5; 
   margin-top: 10px;
 }
 
-
-.sidebar nav a {
+.nav-link {
   display: block;
   padding: 10px;
   margin-bottom: 6px;
@@ -23,9 +22,8 @@
   border-radius: 10px;
 }
 
-
-.sidebar nav a.active,
-.sidebar nav a:hover {
+.nav-link.active,
+.nav-link:hover {
   background: #4f46e5;
   color: white;
 }

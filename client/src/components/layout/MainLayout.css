@@ -1,7 +1,33 @@
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden; /* stop page scrolling */
+}
 
-.app-layout { display: flex; height: 100vh; }
+.app-layout {
+  display: flex;
+  height: 100vh;
+  background: #f5f7fb;
+}
 
+/* Sidebar stays fixed height */
+.sidebar {
+  height: 100vh;
+  flex-shrink: 0;
+}
 
+/* Right side layout */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* prevent double scroll */
+}
 
-.main-area { flex: 1; display: flex; flex-direction: column; }
-
+/* ONLY this scrolls */
+.content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}

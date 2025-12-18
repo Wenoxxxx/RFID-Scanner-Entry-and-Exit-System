@@ -1,4 +1,4 @@
-import './LineChart.css';
+import './DashboardLineChart.css';
 import {
   LineChart,
   Line,
@@ -9,22 +9,24 @@ import {
   ResponsiveContainer
 } from "recharts";
 
+// Dummy data pani, butang data later relate sa logs
 const data = [
-  { day: "Mon", entries: 120 },
-  { day: "Tue", entries: 210 },
-  { day: "Wed", entries: 180 },
-  { day: "Thu", entries: 260 },
-  { day: "Fri", entries: 300 },
-  { day: "Sat", entries: 220 },
-  { day: "Sun", entries: 150 },
+  { day: "Mon", Total: 120 },
+  { day: "Tue", Total: 210 },
+  { day: "Wed", Total: 180 },
+  { day: "Thu", Total: 260 },
+  { day: "Fri", Total: 300 },
+  { day: "Sat", Total: 220 },
+  { day: "Sun", Total: 150 },
 ];
 
-export default function yLineChart() {
+export default function WeeklyLineChart() {
   return (
-    <div className="card chart-card">
+    <div className="chart-card">
       <h4 className="card-title">Weekly Activity</h4>
 
       <div className="chart-wrapper">
+        
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -33,13 +35,14 @@ export default function yLineChart() {
             <Tooltip />
             <Line
               type="monotone"
-              dataKey="entries"
+              dataKey="Total"
               stroke="#5b5be0"
               strokeWidth={3}
               dot={{ r: 5 }}
             />
           </LineChart>
         </ResponsiveContainer>
+
       </div>
     </div>
   );
