@@ -1,3 +1,5 @@
+
+
 .table { 
     width: 100%; 
     border-collapse: collapse; 
@@ -19,3 +21,42 @@
     border-bottom: 1px solid #eee; 
 }
 
+.actions-col {
+    text-align: right;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.icon-btn {
+    
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 8px;
+}
+
+.icon-btn.edit:hover {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.icon-btn.delete:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.status.in {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.status.out {
+  color: #dc2626;
+  font-weight: 600;
+}

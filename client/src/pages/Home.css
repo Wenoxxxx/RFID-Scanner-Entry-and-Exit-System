@@ -1,1 +1,7 @@
 .dashboard { display: grid; gap: 24px; }
+
+.page-title {
+    font-size: 28px;
+    font-weight: 600;
+    padding-top: 10px;
+}

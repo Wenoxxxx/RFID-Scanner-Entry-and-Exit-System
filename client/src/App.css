@@ -7,24 +7,3 @@ body { margin: 0; background: #f5f7fb; }
 .content { padding: 24px; }
 
 
-.stats-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-gap: 16px;
-}
-
-
-.card {
-background: white;
-padding: 20px;
-border-radius: 16px;
-box-shadow: 0 8px 30px rgba(0,0,0,.05);
-}
-
-
-.card-title { color: #777; font-size: 14px; }
-
-
-.table { width: 100%; border-collapse: collapse; }
-.table th, .table td { padding: 12px; text-align: left; }
-.table tr:not(:last-child) { border-bottom: 1px solid #eee; }
