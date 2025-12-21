@@ -1,10 +1,11 @@
 import './Header.css';
+import { CgProfile } from "react-icons/cg";
 
 export default function Header() {
     return (
         <header className="header">
-            <input className="search" placeholder="Search…" />
-            <div className="profile">OTEN</div>
+   
+            
         </header>
     );
 }
