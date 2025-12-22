@@ -1,66 +1,57 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../models/db");
 
-router.get("/", (req, res) => {
-  db.all("SELECT * FROM logs", [], (err, rows) => {
-    if (err) {
-      res.status(500).json(err);
-    } else {
-      res.json(rows);
-    }
+/*
+ TEMP DATA (for learning)
+ Later we replace this with a database
+*/
+let logs = [];
+
+/* ======================
+   GET IN LOGS
+====================== */
+router.get("/in", (req, res) => {
+  const inLogs = logs.filter(log => log.status === "IN");
+  res.json(inLogs);
+});
+
+/* ======================
+   GET OUT LOGS
+====================== */
+router.get("/out", (req, res) => {
+  const outLogs = logs.filter(log => log.status === "OUT");
+  res.json(outLogs);
+});
+
+/* ======================
+   GET SUMMARY
+====================== */
+router.get("/summary", (req, res) => {
+  const totalEntries = logs.filter(l => l.status === "IN").length;
+  const totalExits = logs.filter(l => l.status === "OUT").length;
+
+  res.json({
+    totalEntries,
+    totalExits,
+    totalAttendees: totalEntries - totalExits
   });
 });
 
-
+/* ======================
+   ADD LOG (SCAN)
+====================== */
 router.post("/", (req, res) => {
-  const { user, name, status, time } = req.body;
+  const { name, status } = req.body;
 
-  db.run(
-    "INSERT INTO logs (user, name, status, time) VALUES (?, ?, ?, ?)",
-    [user, name, status, time],
-    function (err) {
-      if (err) {
-        res.status(500).json(err);
-      } else {
-        res.json({ id: this.lastID });
-      }
-    }
-  );
+  const newLog = {
+    id: logs.length + 1,
+    name,
+    status,
+    time: new Date().toLocaleTimeString()
+  };
+
+  logs.push(newLog);
+  res.status(201).json(newLog);
 });
-
-
-router.put("/:id", (req, res) => {
-  const { status } = req.body;
-  const { id } = req.params;
-
-  db.run(
-    "UPDATE logs SET status = ? WHERE id = ?",
-    [status, id],
-    function (err) {
-      if (err) {
-        res.status(500).json(err);
-      } else {
-        res.json({ updated: this.changes });
-      }
-    }
-  );
-});
-
-
-router.delete("/:id", (req, res) => {
-  db.run(
-    "DELETE FROM logs WHERE id = ?",
-    [req.params.id],
-    function (err) {
-      if (err) {
-        res.status(500).json(err);
-      } else {
-        res.json({ deleted: this.changes });
-      }
-    }
-  );
-});
-
 
 module.exports = router;

@@ -5,13 +5,20 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+
+# ======================
+# Runtime / Temp Files
+# ======================
+.tmp/
+temp/
+.cache/
 
 # ======================
 # Build outputs
 # ======================
 dist/
 build/
-.cache/
 .vite/
 coverage/
 
@@ -19,21 +26,8 @@ coverage/
 # Environment variables
 # ======================
 .env
-.env.local
-.env.*.local
-
-# ======================
-# System junk
-# ======================
-.DS_Store
-Thumbs.db
-
-# ======================
-# IDE / Editor files
-# ======================
-.vscode/
-.idea/
-*.swp
+.env.*
+!.env.example
 
 # ======================
 # Logs
@@ -47,3 +41,24 @@ logs/
 *.db
 *.sqlite
 *.sqlite3
+
+# ======================
+# Serial / Hardware Noise
+# ======================
+serial/logs/
+serial/*.log
+serial/*.txt
+
+# ======================
+# IDE / Editor files
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# OS junk
+# ======================
+.DS_Store
+Thumbs.db
