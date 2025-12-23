@@ -12,20 +12,14 @@ app.use(express.json());
 // =====================
 // ROUTES
 // =====================
-
-// Existing logs routes
 const logsRoutes = require("./routes/logs.routes");
 app.use("/api/logs", logsRoutes);
-
-// NEW: RFID routes
-const rfidRoutes = require("./routes/rfid.routes");
-app.use("/api/rfid", rfidRoutes);
 
 // =====================
 // HEALTH CHECK
 // =====================
 app.get("/health", (req, res) => {
-  res.json({ status: "OK" });
+  res.json({ status: "OK", time: new Date().toISOString() });
 });
 
 // =====================
@@ -33,7 +27,8 @@ app.get("/health", (req, res) => {
 // =====================
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+  console.log("=================================");
+  console.log("🚀 Express API is running");
+  console.log(`📡 http://localhost:${PORT}`);
+  console.log("=================================");
 });
-
-require("./serial/arduino");

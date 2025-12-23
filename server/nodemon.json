@@ -1,0 +1,5 @@
+{
+  "watch": ["index.js", "routes"],
+  "ext": "js",
+  "ignore": ["serial"]
+}
