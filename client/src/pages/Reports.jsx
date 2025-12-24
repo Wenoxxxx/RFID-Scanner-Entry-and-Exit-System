@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -8,20 +8,77 @@ import DailyTimeline from "../components/reports/DailyTimeline";
 
 import "./Reports.css";
 
-const logs = [
-  { name: "John Doe", time: "08:01", status: "IN", date: "2025-12-17" },
-  { name: "John Doe", time: "17:10", status: "OUT", date: "2025-12-17" }
-];
+const API_URL = import.meta.env.VITE_API_URL + "/logs";
+
+// =============================
+// TODAY (YYYY-MM-DD)
+// =============================
+const getToday = () =>
+  new Date().toISOString().split("T")[0];
 
 export default function Reports() {
-  const [date, setDate] = useState("2025-12-17");
+  const [logs, setLogs] = useState([]);
+  const [date, setDate] = useState(getToday());
+  const [loading, setLoading] = useState(false);
 
-  const filteredLogs = logs.filter(log => log.date === date);
+  // =============================
+  // FETCH LOGS (SAME AS LOGS PAGE)
+  // =============================
+  const fetchLogs = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error("Failed to fetch logs");
+      const data = await res.json();
+      setLogs(data);
+    } catch (err) {
+      console.error("Reports API Error:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =============================
+  // REALTIME POLLING
+  // =============================
+  useEffect(() => {
+    fetchLogs(); // initial load
+
+    const interval = setInterval(fetchLogs, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // =============================
+  // NORMALIZE BACKEND DATA
+  // =============================
+  const normalizedLogs = logs.map(log => {
+    const dt = new Date(log.time);
+
+    return {
+      name: log.name,
+      status: log.status,
+      time: dt.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      }),
+      date: dt.toISOString().split("T")[0]
+    };
+  });
+
+  // =============================
+  // FILTER BY SELECTED DATE
+  // =============================
+  const filteredLogs = normalizedLogs.filter(
+    log => log.date === date
+  );
 
   const totalEntries = filteredLogs.filter(l => l.status === "IN").length;
   const totalExits = filteredLogs.filter(l => l.status === "OUT").length;
   const totalAttendees = new Set(filteredLogs.map(l => l.name)).size;
 
+  // =============================
+  // PDF EXPORT (RESPECT DATE)
+  // =============================
   const downloadPDF = () => {
     const doc = new jsPDF();
 
@@ -37,6 +94,9 @@ export default function Reports() {
     doc.save(`EELS_Report_${date}.pdf`);
   };
 
+  // =============================
+  // RENDER
+  // =============================
   return (
     <div className="reports-page">
 
@@ -44,26 +104,29 @@ export default function Reports() {
       <div className="stats-header">
         <div>
           <h1>Reports</h1>
-          <p className="subtitle">Historical data & export</p>
+          <p className="subtitle">Live & historical attendance data</p>
         </div>
 
         <div className="stats-controls">
+          {/* DATE FILTER (KEPT) */}
           <input
             type="date"
             className="date-input"
             value={date}
             onChange={e => setDate(e.target.value)}
           />
+
           <button className="btn-eels" onClick={downloadPDF}>
             Download PDF
           </button>
         </div>
       </div>
 
-      {/* DATE SUMMARY (TOP CARDS) */}
+      {/* SUMMARY */}
       <div className="date-summary">
         <p className="selected-date">
-          Selected Date: <strong>{date}</strong>
+          Showing logs for <strong>{date}</strong>
+          {date === getToday() && " (Live)"}
         </p>
 
         <div className="stats-grid">
@@ -84,9 +147,8 @@ export default function Reports() {
         </div>
       </div>
 
-      {/* WEEKLY + DAILY SUMMARY */}
+      {/* WEEKLY + DAILY */}
       <div className="reports-grid">
-
         <div className="report-card">
           <h4 className="card-title">Weekly Activity Overview</h4>
           <WeeklyLineChart />
@@ -95,12 +157,17 @@ export default function Reports() {
         <div className="report-card">
           <DailySummary logs={filteredLogs} date={date} />
         </div>
-
       </div>
 
-      {/* DAILY TIMELINE */}
+      {/* TIMELINE */}
       <div className="report-card full-width">
         <DailyTimeline logs={filteredLogs} />
+
+        {loading && date === getToday() && (
+          <p style={{ marginTop: 12 }}>
+            Syncing live logs…
+          </p>
+        )}
       </div>
 
     </div>
