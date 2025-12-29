@@ -31,7 +31,7 @@ EELS (Entry and Exit Log System) is a modern access logging platform designed to
 | Frontend     | React, Vite              |
 | Backend      | Node.js, Express.js      |
 | Database     | Pluggable / Future       |
-| IoT          | RFID, Arduino, NodeMCU   |
+| IoT          | RFID, Arduino/ ESP 32    |
 | Communication| REST API                 |
 
 ---
