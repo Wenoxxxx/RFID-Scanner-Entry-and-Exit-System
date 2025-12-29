@@ -26,13 +26,13 @@ EELS (Entry and Exit Log System) is a modern access logging platform designed to
 
 ## Tech Stack
 
-| Layer        | Technology              |
-|--------------|--------------------------|
-| Frontend     | React, Vite              |
-| Backend      | Node.js, Express.js      |
-| Database     | Pluggable / Future       |
-| IoT          | RFID, Arduino/ ESP 32    |
-| Communication| REST API                 |
+| Layer         | Technology            |
+|---------------|-----------------------|
+| Frontend      | React, Vite           |
+| Backend       | Node.js, Express.js   |
+| Database      | Pluggable / Future    |
+| IoT           | RFID, Arduino / ESP32 |
+| Communication | REST API              |
 
 ---
 
@@ -42,41 +42,3 @@ EELS (Entry and Exit Log System) is a modern access logging platform designed to
 ```bash
 git clone https://github.com/your-username/EELS.git
 cd EELS
-2. Setup Frontend
-bash
-Copy code
-cd frontend
-npm install
-npm run dev
-3. Setup Backend
-bash
-Copy code
-cd backend
-npm install
-npm start
-4. IoT Prototype Setup
-Connect the RFID scanner to the microcontroller
-
-Upload firmware to handle card scanning and backend communication
-
-Register authorized RFID cards during Step 3 of the setup process
-
-Usage
-Launch the frontend to access the dashboard
-
-Scan RFID cards on the IoT prototype
-
-Entry and exit logs update automatically in real time
-
-Future Enhancements
-Role-based access control (Admin / User)
-
-Cloud deployment for scalability
-
-Mobile application support
-
-Contributing
-Contributions are welcome. Please fork the repository and submit a pull request with your improvements.
-
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
