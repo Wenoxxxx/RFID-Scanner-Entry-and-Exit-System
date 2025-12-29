@@ -35,7 +35,7 @@ parser.on("data", async (line) => {
       "http://localhost:3000/api/logs/rfid/scan",
       {
         uid,
-        mode: SCAN_MODE, // 🔥 EXPLICIT MODE
+        mode: SCAN_MODE, // EXPLICIT MODE
       }
     );
 

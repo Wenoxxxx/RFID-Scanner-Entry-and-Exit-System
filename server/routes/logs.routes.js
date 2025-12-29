@@ -11,6 +11,13 @@ let idCounter = 1;
 let currentScanMode = "IN";
 
 /* ======================
+   GET ALL LOGS
+====================== */
+router.get("/", (req, res) => {
+  res.json(logs);
+});
+
+/* ======================
    GET IN LOGS
 ====================== */
 router.get("/in", (req, res) => {
@@ -49,7 +56,7 @@ router.post("/mode", (req, res) => {
   }
 
   currentScanMode = mode;
-  console.log(`🔁 Scan mode set to ${mode}`);
+  console.log(`Scan mode set to ${mode}`);
 
   res.json({ mode });
 });
@@ -73,11 +80,11 @@ router.post("/rfid/scan", (req, res) => {
     id: idCounter++,
     name: uid,
     status: currentScanMode,
-    time: new Date().toLocaleTimeString(),
+    time: new Date().toISOString(), // better: ISO format
   };
 
   logs.push(log);
-  console.log(`✅ RFID ${currentScanMode} SAVED:`, log);
+  console.log(`RFID ${currentScanMode} SAVED:`, log);
 
   res.status(201).json(log);
 });
