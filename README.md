@@ -19,7 +19,7 @@ EELS (Entry and Exit Log System) is a modern access logging platform designed to
 ### IoT Prototype
 - RFID scanner integration for physical access control
 - Registered card validation (Step 3 setup)
-- Tested using Arduino / NodeMCU hardware
+- Tested using Arduino / ESP32 hardware
 - Real-time data transmission to backend
 
 ---
