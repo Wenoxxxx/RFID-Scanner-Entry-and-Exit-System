@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const logsRoutes = require("./routes/logs.routes");
 
 const app = express();
 
@@ -12,7 +13,6 @@ app.use(express.json());
 // =====================
 // ROUTES
 // =====================
-const logsRoutes = require("./routes/logs.routes");
 app.use("/api/logs", logsRoutes);
 
 // =====================
