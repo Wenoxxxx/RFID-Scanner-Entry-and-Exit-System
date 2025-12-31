@@ -1,92 +1,17 @@
 const express = require("express");
 const router = express.Router();
+const logsController = require("../controllers/logs.controller");
+const validateMode = require("../middleware/validateMode");
 
 // ======================
-// TEMP STORAGE (in-memory)
+// ROUTES
 // ======================
-let logs = [];
-let idCounter = 1;
+router.get("/", logsController.getAllLogs);        // GET all logs
+router.get("/in", logsController.getInLogs);       // GET IN logs
+router.get("/out", logsController.getOutLogs);     // GET OUT logs
+router.get("/summary", logsController.getSummary); // GET summary
 
-// GLOBAL SCAN MODE (controlled by frontend)
-let currentScanMode = "IN";
-
-/* ======================
-   GET ALL LOGS
-====================== */
-router.get("/", (req, res) => {
-  res.json(logs);
-});
-
-/* ======================
-   GET IN LOGS
-====================== */
-router.get("/in", (req, res) => {
-  res.json(logs.filter(log => log.status === "IN"));
-});
-
-/* ======================
-   GET OUT LOGS
-====================== */
-router.get("/out", (req, res) => {
-  res.json(logs.filter(log => log.status === "OUT"));
-});
-
-/* ======================
-   SUMMARY
-====================== */
-router.get("/summary", (req, res) => {
-  const totalEntries = logs.filter(l => l.status === "IN").length;
-  const totalExits = logs.filter(l => l.status === "OUT").length;
-
-  res.json({
-    totalEntries,
-    totalExits,
-    totalAttendees: totalEntries - totalExits,
-  });
-});
-
-/* ======================
-   SET SCAN MODE (FROM UI)
-====================== */
-router.post("/mode", (req, res) => {
-  const { mode } = req.body;
-
-  if (!["IN", "OUT"].includes(mode)) {
-    return res.status(400).json({ message: "Invalid mode" });
-  }
-
-  currentScanMode = mode;
-  console.log(`Scan mode set to ${mode}`);
-
-  res.json({ mode });
-});
-
-/* ======================
-   RFID SCAN (ARDUINO)
-====================== */
-router.post("/rfid/scan", (req, res) => {
-  const { uid } = req.body;
-  if (!uid) {
-    return res.status(400).json({ message: "UID required" });
-  }
-
-  // Block duplicate logs in same mode
-  const lastLog = [...logs].reverse().find(l => l.name === uid);
-  if (lastLog && lastLog.status === currentScanMode) {
-    return res.status(200).json({ message: "Duplicate ignored" });
-  }
-
-  const log = {
-    id: idCounter++,
-    name: uid,
-    status: currentScanMode,
-    time: new Date().toISOString(), // better: ISO format
-  };
-
-  logs.push(log);
-  console.log(`RFID ${currentScanMode} SAVED:`, log);
-
-  res.status(201).json(log);
-});
+router.post("/mode", validateMode, logsController.setMode); // Set scan mode
+router.post("/rfid/scan", logsController.rfidScan);         // RFID scan
 
 module.exports = router;
