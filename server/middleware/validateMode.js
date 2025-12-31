@@ -1,3 +1,4 @@
+// Middleware to validate mode in request body
 module.exports = (req, res, next) => {
   const { mode } = req.body;
   if (!["IN", "OUT"].includes(mode)) {
