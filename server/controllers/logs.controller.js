@@ -9,13 +9,15 @@ const getToday = () => {
 };
 
 // =============================
-// GET all logs (only today)
+// GET all logs (with optional date filter)
 // =============================
 exports.getAllLogs = (req, res) => {
-  const today = getToday();
+  const { date } = req.query;
+  const targetDate = date || getToday();
+  
   db.query(
     "SELECT * FROM logs WHERE DATE(time) = ? ORDER BY time DESC",
-    [today],
+    [targetDate],
     (err, results) => {
       if (err) return res.status(500).json(err);
       res.json(results);
@@ -54,17 +56,19 @@ exports.getOutLogs = (req, res) => {
 };
 
 // =============================
-// SUMMARY (only today)
+// SUMMARY (with optional date filter)
 // =============================
 exports.getSummary = (req, res) => {
-  const today = getToday();
+  const { date } = req.query;
+  const targetDate = date || getToday();
+  
   db.query(
     `SELECT 
       SUM(status = 'IN') AS totalEntries,
       SUM(status = 'OUT') AS totalExits
      FROM logs
      WHERE DATE(time) = ?`,
-    [today],
+    [targetDate],
     (err, results) => {
       if (err) return res.status(500).json(err);
       const { totalEntries, totalExits } = results[0];
@@ -75,6 +79,13 @@ exports.getSummary = (req, res) => {
       });
     }
   );
+};
+
+// =============================
+// GET current scan mode
+// =============================
+exports.getMode = (req, res) => {
+  res.json({ mode: currentScanMode });
 };
 
 // =============================
@@ -91,15 +102,17 @@ exports.setMode = (req, res) => {
 // RFID scan (allow one IN and one OUT per day)
 // =============================
 exports.rfidScan = (req, res) => {
-  const { uid } = req.body;
+  const { uid, mode } = req.body;
   if (!uid) return res.status(400).json({ message: "UID required" });
 
+  // Use provided mode or fall back to current scan mode
+  const scanMode = mode || currentScanMode;
   const today = getToday();
 
   // Check if this UID already has a log with the same status today
   db.query(
     "SELECT * FROM logs WHERE name = ? AND status = ? AND DATE(time) = ?",
-    [uid, currentScanMode, today],
+    [uid, scanMode, today],
     (err, results) => {
       if (err) return res.status(500).json(err);
 
@@ -107,13 +120,13 @@ exports.rfidScan = (req, res) => {
       if (results.length > 0) {
         return res
           .status(409)
-          .json({ message: `Card already scanned ${currentScanMode} today` });
+          .json({ message: `Card already scanned ${scanMode} today` });
       }
 
       // Otherwise insert new log
       const log = {
         name: uid,
-        status: currentScanMode,
+        status: scanMode,
         time: new Date().toISOString(),
       };
 
