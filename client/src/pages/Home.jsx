@@ -1,41 +1,66 @@
+import { useEffect, useState } from 'react';
 import StatCard from '../components/dashboard/StatCard';
 import WeeklyLineChart from '../components/dashboard/DashboardLineChart'; 
-
-
+import { getSummary } from '../api/logs';
 
 export default function Home() {
-return (
-    
+    const [summary, setSummary] = useState({ totalEntries: 0, totalExits: 0, totalAttendees: 0 });
+    const [loading, setLoading] = useState(true);
 
-    <div className="dashboard">
-        <h1 className='page-title'>Dashboard</h1>
-        <p className="subtitle">Total and current activity</p>
+    const fetchSummary = async () => {
+        try {
+            setLoading(true);
+            const res = await getSummary('all');
+            const data = res.data || {};
+            setSummary({
+                totalEntries: Number(data.totalEntries) || 0,
+                totalExits: Number(data.totalExits) || 0,
+                totalAttendees: Number(data.totalAttendees) || 0,
+            });
+        } catch (err) {
+            console.error('Failed to load summary', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        <div className="stats-grid">
-            
-            <StatCard
-            title="Total Entries"
-            value="1,245"
-            variant="entries"
-            description="Total number of users who entered today."
-            />
+    useEffect(() => {
+        fetchSummary();
+        const id = setInterval(fetchSummary, 3000);
+        return () => clearInterval(id);
+    }, []);
 
-            <StatCard
-            title="Total Exits"
-            value="1,180"
-            variant="exits"
-            description="Total number of users who exited today."
-            />
+    const fmt = (n) => n.toLocaleString();
 
-            <StatCard
-            title="Total Attendees"
-            value="32"
-            variant="attendees"
-            description="Users currently registered for today."
-            />
+    return (
+        <div className="dashboard">
+            <h1 className='page-title'>Dashboard</h1>
+            <p className="subtitle">Total and current activity</p>
 
+            <div className="stats-grid">
+                <StatCard
+                    title="Total Entries"
+                    value={loading ? '—' : fmt(summary.totalEntries)}
+                    variant="entries"
+                    description="Total number of entries recorded across the database."
+                />
+
+                <StatCard
+                    title="Total Exits"
+                    value={loading ? '—' : fmt(summary.totalExits)}
+                    variant="exits"
+                    description="Total number of exits recorded across the database."
+                />
+
+                <StatCard
+                    title="Total Attendees"
+                    value={loading ? '—' : fmt(summary.totalAttendees)}
+                    variant="attendees"
+                    description="Current attendee count (entries minus exits) across the database."
+                />
+            </div>
+
+            <WeeklyLineChart />
         </div>
-        <WeeklyLineChart />
-    </div>
     );
 }
